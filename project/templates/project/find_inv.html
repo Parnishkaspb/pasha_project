@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Поиск вложений
+{% endblock %}
+
+{% block content %}
+{% include 'inc/_nav.html' %}
+    <style>
+        .highlight {
+            font-weight: bold;
+            color: blue;
+        }
+        .add_icon {
+            width: 12px;
+            height: 12px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+          }
+      
+          .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+          }
+      
+          .search-form {
+            margin-bottom: 20px;
+          }
+      
+          .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70%;
+            max-width: 400px;
+          }
+      
+          .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: lime;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+      
+          .suggested-keywords {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+          }
+      
+          .suggested-keywords li {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+      
+          .selected-keywords {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+          }
+      
+          .selected-keywords li {
+            margin-bottom: 10px;
+          }
+      
+          .project-container {
+            max-width: 800px;
+            margin: 0 auto;
+          }
+      
+          .project-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+          }
+      
+          .project-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+      
+          .project-description {
+            color: #555;
+            margin-bottom: 10px;
+          }
+      
+          .project-details {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 10px;
+          }
+      
+          .project-budget {
+            margin-bottom: 10px;
+            font-weight: bold;
+          }
+      
+          .project-file {
+            margin-bottom: 10px;
+          }
+      
+          .project-file a {
+            color: #007bff;
+            text-decoration: none;
+          }
+      
+          @media screen and (max-width: 600px) {
+            .project-card {
+              padding: 10px;
+            }
+      
+            .project-title {
+              font-size: 20px;
+              margin-bottom: 8px;
+            }
+      
+            .project-description,
+            .project-details,
+            .project-budget,
+            .project-file {
+              font-size: 14px;
+              margin-bottom: 6px;
+            }
+          }
+    </style>
+    <div class='main'>
+        <div class="search-container">
+            <form method="post" action="{% url 'find_an_investor' %}" id='find_inv'>
+                <div class="search-container">
+                <ul id="keyword_list_delete" class="selected-keywords"></ul>
+                <input type="text" id="keyword_input" class="search-input" placeholder="Введите ключевые слова">
+                <button type="submit" class="search-button">Поиск</button>
+                <input type="hidden" id="keyword_input_hidden"  name="keyword_input_hidden">
+                <ul id="keyword_list_add" class="suggested-keywords"></ul>
+                {% csrf_token %}
+                
+            </form>
+        </div>
+    </div>
+    <div id="result-div" class="project-container"></div>
+    <script src="{% static 'js/help_function.js' %}"> </script>
+    <script>
+        const keyword = document.getElementById('keyword_input');
+        const keywordListAdd = document.getElementById('keyword_list_add');
+
+        keyword.addEventListener('input', function () {
+            NewQuery(keywordListAdd, 'keyword', 'autocompletekeyword', keyword, "{% static 'images/free-icon-add-button-8344983.png' %}", 3)
+        });
+        
+
+        $(document).ready(function() {
+            $('#find_inv').submit(function(event) {
+                event.preventDefault();
+                let formData = $(this).serialize();
+            
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'find_an_investor' %}',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        const resultDiv = document.getElementById('result-div');
+                        let word = '';
+                        if (response.length == 0) {
+                            word += '<h3> Поиск не дал результатов! </h3>';
+                        } else {
+                            for (let i = 0; i < response.length; i++){
+                                let tmp = ''
+                                if (response[i].know.length == 10){
+                                    tmp += response[i].know;
+                                } else {
+                                    for (let j = 0; j < response[i].know.length; j++){
+                                        if (j == response[i].know.length - 1){
+                                            tmp += response[i].know[j];
+                                        } else {
+                                            tmp += response[i].know[j] + ' --> ';
+                                        }
+                                    }
+                                }
+                                
+                                word += '<div class="project-card"> '+
+                                    '<h2 class="project-title">Владелец: ' + response[i].owner + '</h2>' +
+                                    '<h2 class="project-title">Название проекта: ' + response[i].project.title + '</h2>' +
+                                    '<p class="project-budget">Бюджет: ' + response[i].project.budget + '</p>' +
+                                    '<p class="project-file"> Файл: <a href="/download/'+response[i].project.pk+'/"> Скачать файл </a> </p>' +
+                                    '<p class="project-details">Ключевые слова:' + response[i].project.keywords + '</p>' +
+                                    '<h1>' + tmp + '</h1>' +
+                                '</div>'
+                            }
+                        }
+                        resultDiv.innerHTML = word;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });          
+    </script>
+{% endblock %}
+
+
+{% comment %} /* Обновляем содержимое <div> с использованием полученных данных
+    resultDiv.innerHTML = '<p>${data}</p>'; */ {% endcomment %}

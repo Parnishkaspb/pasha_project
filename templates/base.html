@@ -1,0 +1,62 @@
+{% load static %}
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} Тест {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-theme4.css' %}">
+    <script src="{% static '/js/jquery.js' %}"></script>
+    {% comment %} <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> {% endcomment %}
+  
+  
+  
+  
+  
+  
+    <link href="{% static 'assets/flat_icon/flaticon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/lightcase.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/slick.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/slick-theme.css' %} " rel="stylesheet">
+    <link href="{% static 'assets/css/style.css' %} " rel="stylesheet">
+    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet">
+  
+  </head>
+  <body>
+    <div class="image-container">
+      <img src="{% static 'assets/images/blog_01.jpg' %}" alt="Картинка">
+    </div>
+    {% block content %}
+      Content
+    {% endblock content%}
+    <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    <script type="module" src="{% static 'js/js.cookie.mjs' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    {% comment %} <script src="{% static 'js/bootstrap.min.js' %}
+    js/bootstrap.min.js"></script> {% endcomment %}
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+
+
+        <!-- Bootstrap Progressbar -->
+        <script src="{% static 'assets/js/bootstrap-progressbar.js'%}"></script>
+
+        <!-- Isotop -->
+        <script src="{% static 'assets/js/isotope.pkgd.min.js'%}"></script>
+    
+        <!-- Lightcase -->
+        <script src="{% static 'assets/js/lightcase.js'%}"></script>
+    
+        <!-- Slick -->
+        <script src="{% static 'assets/js/slick.js'%}"></script>
+    
+        <!-- Custom -->
+        <script src="{% static 'assets/js/custom.js'%}"></script>
+    
+  </body>
+</html>

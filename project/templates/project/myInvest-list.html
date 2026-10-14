@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Мои проекты
+{% endblock %}
+
+{% block content %}
+{% include 'inc/_nav.html' %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+          }
+      
+          .project-container {
+            max-width: 800px;
+            margin: 0 auto;
+          }
+      
+          .project-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+          }
+      
+          .project-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+      
+          .project-description {
+            color: #555;
+            margin-bottom: 10px;
+          }
+      
+          .project-details {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 10px;
+          }
+      
+          .project-budget {
+            margin-bottom: 10px;
+            font-weight: bold;
+          }
+      
+          .project-file {
+            margin-bottom: 10px;
+          }
+          .project-succes {
+            color: green;
+            margin-bottom: 10px;
+          }
+          .project-no {
+            color: red;
+            margin-bottom: 10px;
+          }
+      
+          .project-file a {
+            color: #007bff;
+            text-decoration: none;
+          }
+      
+          @media screen and (max-width: 600px) {
+            .project-card {
+              padding: 10px;
+            }
+      
+            .project-title {
+              font-size: 20px;
+              margin-bottom: 8px;
+            }
+      
+            .project-description,
+            .project-details,
+            .project-budget,
+            .project-file {
+              font-size: 14px;
+              margin-bottom: 6px;
+            }
+          }
+
+          .delete {
+            {% comment %} background-color: #6e1c37; {% endcomment %}
+            background-color: lime;
+            color: black;
+          }
+    </style>
+
+
+
+    {% for allMyProject in allMyProject %}
+    <div class='main'>
+        <div class="project-container">
+            <div class="project-card">
+                <h2 class="project-title">{{ allMyProject.title }}</h2>
+                {% comment %} КАРТИНКА ПРОЕКТА {% endcomment %}
+                <p class="project-description">{{ allMyProject.description }}</p>
+                <p class="project-details">Ключевые слова: {{ allMyProject.keywords }}</p>
+                <p class="project-budget">Бюджет: {{ allMyProject.budget }}</p>
+                <p class="project-file">Файл проекта: <a href="{% url 'download_file' allMyProject.pk %}">Скачать файл</a></p>
+                {% if allMyProject.on %}
+                    <p class="project-succes"> Ваш проект доступен всем <p>
+                {% else %}
+                    <p class="project-no"> Ваш проект не доступен всем <p> 
+                {% endif %}
+                <a href="{% url 'delete_project' allMyProject.pk %}" class='btn delete'> Удалить проект </a>
+                {% comment %} <a href="{% url 'edit_invest' allMyProject.pk %}" class='btn delete'> Редактировать проект </a> {% endcomment %}
+            </div>
+          </div>
+    </div>
+    {% endfor %}
+{% endblock %}

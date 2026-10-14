@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Регистрация
+{% endblock %}
+
+
+{% block content %}
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+    </style>
+    <form action="{% url 'next_step_registration' %}" id='msform' method="post">
+        <h4> Заполнить информацию о себе </h4>
+        {{form.persona}}
+
+        {{form.fio_psev}}
+
+        <ul id="whatdo_list_delete"></ul>
+        {{ form.whatdo_input }}
+        {{ form.whatdo_input_hidden }}
+        {{ form.activity_add_input }}
+        {% comment %} <input type='hidden' id='activity_add_input' name='activity_add_input'> {% endcomment %}
+        <input type='button' id='proffesion' value='Не нашлась профессия - Жми!'>  </input>
+        <ul id="whatdo_list_add"></ul>
+
+
+
+        <ul id="keyword_list_delete"></ul>
+        {{ form.keyword_input }}
+        {{ form.keyword_input_hidden }}
+        {{ form.keywords_add_input }}
+        {% comment %} <input type='hidden' id='keywords_add_input' name='keywords_add_input'> {% endcomment %}
+        <input type='button' id='keys' value='Нет ключевых слов - Жми!'>  </input>
+        <ul id="keyword_list_add"></ul>
+
+
+        <ul id="city_list_delete"></ul>
+        {{ form.city_input }}
+        {{ form.city_input_hidden }}
+        <ul id="city_list_add"></ul>
+
+
+        {{form.contact_information}}
+
+        {{form.links}}
+        
+        {{form.specialwords}}
+        
+        {% csrf_token %}
+        <button type="submit" id='reg' class="btn btn-primary"> Зарегистрироваться </button>
+    </form>
+
+    <script src="{% static 'js/help_function.js' %}"> </script>
+    <script>
+        const keyword = document.getElementById('keyword_input');
+        const keywordListAdd = document.getElementById('keyword_list_add');
+
+        const city = document.getElementById('city_input');
+        const cityListAdd = document.getElementById('city_list_add');
+
+        const whatdo = document.getElementById('whatdo_input');
+        const whatdoListAdd = document.getElementById('whatdo_list_add');
+
+        keyword.addEventListener('input', function () {
+            NewQuery(keywordListAdd, 'keyword', 'autocompletekeyword', keyword, "{% static 'images/free-icon-add-button-8344983.png' %}", 3)
+        });
+
+        city.addEventListener('input', function () {
+            NewQuery(cityListAdd, 'city', 'autocompletecity', city, "{% static 'images/free-icon-add-button-8344983.png' %}", 1)
+        });
+
+        whatdo.addEventListener('input', function () {
+            NewQuery(whatdoListAdd, 'whatdo', 'autocompletewhatdo', whatdo, "{% static 'images/free-icon-add-button-8344983.png' %}", 2)
+        });
+
+        var keywords_add = [];
+        var activity_add = [];
+        $('#proffesion').click(function() {
+            let val = whatdo.value;
+            if (whatdo.value != ''){
+                if (!activity_add.includes(val)){                    
+                    doSomething(2, whatdo.value, 1);
+                    const activity_add_input = document.getElementById('activity_add_input');
+                    activity_add.push(val);
+                    activity_add_input.value = activity_add;
+                }
+            }
+        });
+        
+        $('#keys').click(function() {
+            let val = keyword.value;
+            if (keyword.value != ''){
+                doSomething(3, keyword.value, 1);
+                const keywords_add_input = document.getElementById('keywords_add_input');
+                keywords_add_input.value = '';
+                keywords_add.push(val);
+                keywords_add_input.value = keywords_add;
+            }
+        });
+        
+
+/*
+        function removeElement(list_items){
+            let items = document.querySelectorAll('.'+list_items+'');
+            items.forEach((item) => {                    
+                item.remove();
+            })
+        }
+
+        var whatdoinsible = document.getElementById("what_do_invisible");
+        var keywordsinvisible = document.getElementById("keywords_invisible");
+        var citysinvisible = document.getElementById("city_invisible");
+        var pwhatdoinsible = document.getElementById("w_do_in");
+        
+        
+        
+        var city_write = document.getElementById("city");
+        city_write.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(city_write, city_list, 'list_city', 3);
+        });
+
+        var whatdo = document.getElementById("what_do");
+        whatdo.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(whatdo, activity_list, 'list_what_do', 1);
+        });
+
+        var keywords = document.getElementById("keywords");
+        keywords.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(keywords, keywords_list, 'list_keywords', 2);
+        });
+
+        function create(what, ofWhat, where, add){
+            for (let i of ofWhat){                
+                if (
+                    i.toLowerCase().startsWith(what.value.toLowerCase()) && what.value !=""
+                ) {
+                    createListItem(what, add, 'list-items', where, i, 1, 1);
+                }
+            }
+        }
+        
+        function delete_element(values){
+
+            if (activity.includes(values)){
+                activity.splice(activity.indexOf(values), 1)
+                //console.log(activity);
+                removeElement('list-items-invisible');
+                for (let i = 0; i < activity.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible', 'list_what_do_invisible', activity[i], activity[i], 2);
+                    //console.log(activity[i]);
+                }
+            }
+
+            if (keywordss.includes(values)){
+                keywordss.splice(keywordss.indexOf(values), 1)
+                //console.log(keywordss);
+                removeElement('list-items-invisible-keywordss');
+                for (let i = 0; i < keywordss.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible-keywordss', 'list_items_invisible_keywordss', keywordss[i], keywordss[i], 2);
+                    //console.log(keywordss[i]);
+                }
+            }
+
+            if (citys.includes(values)){
+                citys.splice(citys.indexOf(values), 1)
+                //console.log(keywordss);
+                removeElement('list-items-invisible-city');
+                for (let i = 0; i < citys.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible-city', 'list_items_invisible_city', citys[i], citys[i], 2);
+                    //console.log(keywordss[i]);
+                }
+            }
+        }
+
+        function createListItem(what, add, list_itemss, where, count, values, create_delete){
+            let listItem = document.createElement("li");
+            listItem.style.cursor = "pointer";
+
+            if (create_delete == 1){
+                listItem.classList.add(list_itemss);
+                listItem.setAttribute("onclick", "add("+add+",'" + count + "')");
+                let word = "<b>" + count.substr(0, what.value.length) + "</b>";
+                word += count.substr(what.value.length) + "  &#10010;";
+                listItem.innerHTML = word;
+            } 
+            if (create_delete == 2) {
+                listItem.classList.add(list_itemss);
+                listItem.setAttribute("onclick", "delete_element('" + count + "')");
+                listItem.innerHTML = values + "  &#10006;";
+            }
+            
+            document.querySelector("."+where+"").appendChild(listItem);
+        }
+
+        function add(what,value){
+            /*
+            alert(what);
+            alert(value); 
+            */
+            /*
+            if (what == 1){
+                if (!activity.includes(value)){
+                    removeElement('list-items-invisible');
+                    activity.push(value);
+                    whatdoinsible.value = activity;
+                    console.log('Добавлен в список:' + activity);
+                    
+                    for (let i = 0; i < activity.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible', 'list_what_do_invisible', activity[i], activity[i], 2);
+                        console.log(activity[i]);
+                    }
+                }
+            }
+            if (what == 2){
+                if (!keywordss.includes(value)){
+                    removeElement('list-items-invisible-keywordss');
+                    keywordss.push(value);
+                    keywordsinvisible.value = keywordss;
+                    console.log('Добавлен в список:' + keywordss);
+                    for (let i = 0; i < keywordss.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible-keywordss', 'list_items_invisible_keywordss', keywordss[i], keywordss[i], 2);
+                        console.log(keywordss[i]);
+                    }
+                }
+            }
+
+            if (what == 3){
+                if (!citys.includes(value)){
+                    removeElement('list-items-invisible-city');
+                    citys.push(value);
+                    citysinvisible.value = citys;
+                    console.log('Добавлен в список:' + citys);
+                    for (let i = 0; i < citys.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible-city', 'list_items_invisible_city', citys[i], citys[i], 2);
+                        console.log(citys[i]);
+                    }
+                }
+            }
+            /*
+            alert('Список activity: ' + activity);
+            alert('Список keywords: ' + keywordss);
+            */
+            /*
+        }
+        {% comment %} function addKeywords(value){
+            
+        } {% endcomment %}
+        function removeElement(list_items){
+            let items = document.querySelectorAll('.'+list_items+'');
+            items.forEach((item) => {                    
+                item.remove();
+            })
+        }
+        */
+    </script>
+{% endblock %}

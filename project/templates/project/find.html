@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Поиск человека
+{% endblock %}
+
+
+{% block content %}
+<style>
+    .search-form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+    
+      .search-form input[type="text"],
+      .search-form input[type="hidden"] {
+        width: 250px;
+        flex: 1;
+        padding: 10px;
+        border: 1px solid lime;
+        border-radius: 5px;
+        outline: none;
+      }
+    
+      .search-form button {
+        padding: 10px 20px;
+        background-color: lime;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    
+      .results {
+        margin-top: 50px;
+        margin-left: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      
+      .person-card {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 5px;
+        border: 0.1px solid lime;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      
+      .person-card h3 {
+        margin-top: 0;
+      }
+      
+      .person-card p {
+        margin: 5px 0;
+      }
+      
+      hr {
+        border: none;
+        border-top: 1px solid #ccc;
+      }
+</style>
+{% include 'inc/_nav.html' %}
+    <div class='main'>
+        <div class="search-form">
+            <form method="post" action="{% url 'find' %}" id='forma'>
+                <ul id="whatdo_list_delete"></ul>
+                <input type="text" id="whatdo_input" class='form-control' placeholder="Введите деятельность">
+                <input type="hidden" id="whatdo_input_hidden"  name="whatdo_input_hidden">
+                <ul id="whatdo_list_add"></ul>
+                    <ul id="keyword_list_delete"></ul>
+                    <input type="text" id="keyword_input" class='form-control' placeholder="Введите ключевые слова">
+                    <input type="hidden" id="keyword_input_hidden"  name="keyword_input_hidden">
+                    <ul id="keyword_list_add"></ul>
+                    <ul id="city_list_delete"></ul>
+                    <input type="text" id="city_input" class='form-control' placeholder="Введите название города">
+                    <input type="hidden" id="city_input_hidden" name="city_input_hidden">
+                    <ul id="city_list_add"></ul>
+                    {% csrf_token %}
+                <button type="submit">Поиск</button>
+            </form>
+        </div>
+          
+          <div class="results" id='results'></div>
+    </div>
+
+
+
+
+    <script src="{% static 'js/help_function.js' %}"> </script>
+    <script>
+        const keyword = document.getElementById('keyword_input');
+        const keywordListAdd = document.getElementById('keyword_list_add');
+
+        const city = document.getElementById('city_input');
+        const cityListAdd = document.getElementById('city_list_add');
+
+        const whatdo = document.getElementById('whatdo_input');
+        const whatdoListAdd = document.getElementById('whatdo_list_add');
+
+        keyword.addEventListener('input', function () {
+            NewQuery(keywordListAdd, 'keyword', 'autocompletekeyword', keyword, "{% static 'images/free-icon-add-button-8344983.png' %}", 3)
+        });
+
+        city.addEventListener('input', function () {
+            NewQuery(cityListAdd, 'city', 'autocompletecity', city, "{% static 'images/free-icon-add-button-8344983.png' %}", 1)
+        });
+
+        whatdo.addEventListener('input', function () {
+            NewQuery(whatdoListAdd, 'whatdo', 'autocompletewhatdo', whatdo, "{% static 'images/free-icon-add-button-8344983.png' %}", 2)
+        });
+
+        $(document).ready(function() {
+            $('#forma').submit(function(event) {
+                event.preventDefault();
+                let formData = $(this).serialize();
+            
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'find' %}',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        const resultDiv = document.getElementById('results');
+                        console.log(response);
+                        let word = '';
+                        if (response.length == 0) {
+                            word += '<h3> Поиск не дал результатов! </h3>';
+                        } else {
+                            for (let i = 0; i < response.length; i++){
+                                let tmp = ''
+                                if (response[i].know.length == 10){
+                                    tmp += response[i].know;
+                                } else {
+                                    for (let j = 0; j < response[i].know.length; j++){
+                                        if (j == response[i].know.length - 1){
+                                            tmp += response[i].know[j];
+                                        } else {
+                                            tmp += response[i].know[j] + ' --> ';
+                                        }
+                                    }
+                                }
+                                
+                                word += ' <div class="person-card">'+
+                                    '<h3>Имя: ' + response[i].name + '</h3>'+ 
+                                    '<p>Чем занимается: ' + response[i].what_do + '</p>'+ 
+                                    '<p>Где занимается: ' + response[i].city + '</p>'+ 
+                                    '<p>Контактная информация:' + response[i].contact_information + '</p>'+ 
+                                    '<hr>'+
+                                    '<h3> Связи: ' + tmp + '</h3>' +
+                                '</div>'
+                            }
+                        }
+                        resultDiv.innerHTML = word;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });   
+
+/*
+        var whatdoinsible = document.getElementById("what_do_invisible");
+        var keywordsinvisible = document.getElementById("keywords_invisible");
+        var citysinvisible = document.getElementById("city_invisible");
+        var pwhatdoinsible = document.getElementById("w_do_in");
+        
+        
+        
+        var city_write = document.getElementById("city");
+        city_write.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(city_write, city_list, 'list_city', 3);
+        });
+
+        var whatdo = document.getElementById("what_do");
+        whatdo.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(whatdo, activity_list, 'list_what_do', 1);
+        });
+
+        var keywords = document.getElementById("keywords");
+        keywords.addEventListener("keyup", (e) => {
+            removeElement('list-items');
+            create(keywords, keywords_list, 'list_keywords', 2);
+        });
+
+        function create(what, ofWhat, where, add){
+            for (let i of ofWhat){                
+                if (
+                    i.toLowerCase().startsWith(what.value.toLowerCase()) && what.value !=""
+                ) {
+                    createListItem(what, add, 'list-items', where, i, 1, 1);
+                }
+            }
+        }
+        
+        function delete_element(values){
+
+            if (activity.includes(values)){
+                activity.splice(activity.indexOf(values), 1)
+                //console.log(activity);
+                removeElement('list-items-invisible');
+                for (let i = 0; i < activity.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible', 'list_what_do_invisible', activity[i], activity[i], 2);
+                    //console.log(activity[i]);
+                }
+            }
+
+            if (keywordss.includes(values)){
+                keywordss.splice(keywordss.indexOf(values), 1)
+                //console.log(keywordss);
+                removeElement('list-items-invisible-keywordss');
+                for (let i = 0; i < keywordss.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible-keywordss', 'list_items_invisible_keywordss', keywordss[i], keywordss[i], 2);
+                    //console.log(keywordss[i]);
+                }
+            }
+
+            if (citys.includes(values)){
+                citys.splice(citys.indexOf(values), 1)
+                //console.log(keywordss);
+                removeElement('list-items-invisible-city');
+                for (let i = 0; i < citys.length; ++i){
+                    createListItem(1, 1, 'list-items-invisible-city', 'list_items_invisible_city', citys[i], citys[i], 2);
+                    //console.log(keywordss[i]);
+                }
+            }
+        }
+
+        function createListItem(what, add, list_itemss, where, count, values, create_delete){
+            let listItem = document.createElement("li");
+            listItem.style.cursor = "pointer";
+
+            if (create_delete == 1){
+                listItem.classList.add(list_itemss);
+                listItem.setAttribute("onclick", "add("+add+",'" + count + "')");
+                let word = "<b>" + count.substr(0, what.value.length) + "</b>";
+                word += count.substr(what.value.length) + "  &#10010;";
+                listItem.innerHTML = word;
+            } 
+            if (create_delete == 2) {
+                listItem.classList.add(list_itemss);
+                listItem.setAttribute("onclick", "delete_element('" + count + "')");
+                listItem.innerHTML = values + "  &#10006;";
+            }
+            
+            document.querySelector("."+where+"").appendChild(listItem);
+        }
+
+        function add(what,value){
+            /*
+            alert(what);
+            alert(value); 
+            */
+            /*
+            if (what == 1){
+                if (!activity.includes(value)){
+                    removeElement('list-items-invisible');
+                    activity.push(value);
+                    whatdoinsible.value = activity;
+                    console.log('Добавлен в список:' + activity);
+                    
+                    for (let i = 0; i < activity.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible', 'list_what_do_invisible', activity[i], activity[i], 2);
+                        console.log(activity[i]);
+                    }
+                }
+            }
+            if (what == 2){
+                if (!keywordss.includes(value)){
+                    removeElement('list-items-invisible-keywordss');
+                    keywordss.push(value);
+                    keywordsinvisible.value = keywordss;
+                    console.log('Добавлен в список:' + keywordss);
+                    for (let i = 0; i < keywordss.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible-keywordss', 'list_items_invisible_keywordss', keywordss[i], keywordss[i], 2);
+                        console.log(keywordss[i]);
+                    }
+                }
+            }
+
+            if (what == 3){
+                if (!citys.includes(value)){
+                    removeElement('list-items-invisible-city');
+                    citys.push(value);
+                    citysinvisible.value = citys;
+                    console.log('Добавлен в список:' + citys);
+                    for (let i = 0; i < citys.length; ++i){
+                        createListItem(1, 1, 'list-items-invisible-city', 'list_items_invisible_city', citys[i], citys[i], 2);
+                        console.log(citys[i]);
+                    }
+                }
+            }
+            /*
+            alert('Список activity: ' + activity);
+            alert('Список keywords: ' + keywordss);
+            */
+            /*
+        }
+        {% comment %} function addKeywords(value){
+            
+        } {% endcomment %}
+        function removeElement(list_items){
+            let items = document.querySelectorAll('.'+list_items+'');
+            items.forEach((item) => {                    
+                item.remove();
+            })
+        }
+        */
+    </script>
+{% endblock %}

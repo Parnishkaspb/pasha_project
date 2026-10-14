@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Регистрация
+{% endblock %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-theme4.css' %}">
+    <div class="form-body">
+        {% comment %} <div class="website-logo">
+            <a href="index.html">
+                <div class="logo">
+                    <img class="logo-size" src="images/logo-light.svg" alt="">
+                </div>
+            </a>
+        </div> {% endcomment %}
+        <div class="row">
+            <div class="img-holder">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    <img src="images/graphic1.svg" alt="">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items">
+                        <h3>Связи</h3>
+                        <p>Вход в мир связей</p>
+                        <div class="page-links">
+                            <a href="{% url 'login' %}" >Вход</a><a href="{% url 'register' %}" class="active">Регистрация</a>
+                        </div>
+                        <form action="{% url 'register' %}" id='forma' method="post">
+                            {% if flag_login == False %}
+                                <p class='error'> Такой логин уже существует 
+                                    <style>
+                                        #login {
+                                            margin-top: 10px;
+                                            border-radius: 10px;
+                                            border-color: red;
+                                        }
+                                    </style>
+                                    {{form.login}}
+                                </p>
+                            {% else %}
+                                {{form.login}}
+                            {% endif %}
+                            
+                            {% if flag_pass == False %}
+                                <p class='error'>  Пароли не совпадают
+                                    <style>
+                                        #password {
+                                            border-radius: 10px;
+                                            margin-top: 10px;
+                                            border-color: red;
+                                        }
+                                        #password_repeat {
+                                            border-radius: 10px;
+                                            margin-top: 10px;
+                                            border-color: red;
+                                        }
+                                    </style>
+                                    {{form.password}}
+                                    {{form.password_repeat}}
+                                </p>
+                            {% else %}
+                                {{form.password}}
+                                {{form.password_repeat}}
+                            {% endif %}
+                            
+                            {% if flag_promo == False %}
+                                <p class='error'> Такого промокода не существует! 
+                                    <style>
+                                        #specialwords {
+                                            border-radius: 10px;
+                                            margin-top: 10px;
+                                            border-color: red;
+                                        } 
+                                    </style>
+                                                
+                                    {{form.specialwords}}
+                                </p>
+                            {% else %}
+                                {{form.specialwords}}
+                            {% endif %}
+                            
+                            {% csrf_token %}
+                            <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Зарегистрироваться</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %} <form action="/register" id='msform' method="post">
+        <h4> Регистрация </h4>
+        {% if flag_login == False %}
+            <p class='error'> Такой логин уже существует 
+                <style>
+                    #login {
+                        margin-top: 10px;
+                        border-radius: 10px;
+                        border-color: red;
+                    }
+                </style>
+                {{form.login}}
+            </p>
+        {% else %}
+            {{form.login}}
+        {% endif %}
+        
+        {% if flag_pass == False %}
+            <p class='error'>  Пароли не совпадают
+                <style>
+                    #password {
+                        border-radius: 10px;
+                        margin-top: 10px;
+                        border-color: red;
+                    }
+                    #password_repeat {
+                        border-radius: 10px;
+                        margin-top: 10px;
+                        border-color: red;
+                    }
+                </style>
+                {{form.password}}
+                {{form.password_repeat}}
+            </p>
+        {% else %}
+            {{form.password}}
+            {{form.password_repeat}}
+        {% endif %}
+        
+        {% if flag_promo == False %}
+            <p class='error'> Такого промокода не существует! 
+                <style>
+                    #specialwords {
+                        border-radius: 10px;
+                        margin-top: 10px;
+                        border-color: red;
+                    } 
+                </style>
+                               
+                {{form.specialwords}}
+            </p>
+        {% else %}
+            {{form.specialwords}}
+        {% endif %}
+        
+        {% csrf_token %}
+        <button disabled type="submit" id='reg' class="btn btn-primary"> Зарегистрироваться </button>
+    </form> {% endcomment %}
+    <script>
+        $(document).ready(function() {
+            //$('.login').onfocus = function(){alert('hello')};
+            let login = document.getElementById("login").addEventListener("focusout", myBlurFunction);
+            let password = document.getElementById("password").addEventListener("focusout", myBlurFunction);
+            let password_repeat = document.getElementById("password_repeat").addEventListener("focusout", myBlurFunction);
+            let specialwords = document.getElementById("specialwords").addEventListener("focusout", myBlurFunction);
+            //login
+
+            function myBlurFunction() {
+                var test = [];
+                let flag = false;
+                $('#forma').find(':input').each(function(i, input) {
+                    test.push($(input).val());
+                });
+
+                for (let i = 0; i<test.length-1; ++i)
+                    if (test[i].length == 0){
+                        flag = true;
+                        break;
+                    }
+
+                /*if (!flag){
+                    document.getElementById("ibtn").disabled = false;
+                }*/
+            }
+        });
+    </script>
+{% endblock %}

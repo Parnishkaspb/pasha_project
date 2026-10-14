@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Главная страница
+{% endblock %}
+
+
+{% block content %}
+{% include 'inc/_nav.html' %}
+  <style>
+    body {
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+    .image-container {
+      margin-top: 1px;
+      margin-right: 1px;
+    }
+
+    .about_details ul li a{
+      background-color: #7fff00;
+    }
+  </style>
+    <div>
+        
+    </div>
+    <div class='main'>
+        <section id="about" class="about about_two padding_140">
+            <div class="body_container">
+              <div class="row">
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="section_header">
+                    <h2 style='color: #7fff00;-webkit-text-stroke: 1px black;
+                    -webkit-text-fill-color: #7fff00;'>Обо мне</h2>
+                    {% if checkpeople %}
+                    <p><em> Аккаунт подтвержден </em></p>
+                    {% else %}
+                    <p><em>  </em></p>
+                    {% endif %}
+                    
+                  </div><!-- section header -->
+                  <div class="about_details">
+                    {% comment %} <p>Unique utilize plug-and-play best practices vis-a-vis out ofbox strategic theme area. Efficient enga backward-compatible collaboration and idea-share before our client based functionalities. Rapidiously visualize world-class architectures with mission critical intellectual capital.</p>
+                    <p>Progressively myocardinate state of the art ROI. Monotonectally disseminate unique methods of empowerment.</p> {% endcomment %}
+                    <ul>
+                      <li><p>Имя<span>:</span></p> <span>{{ name }}</span></li>
+                      <li><p>Псевдоним<span>:</span></p> <span>{{ second_name }}</span></li>
+                      <li><p>Город<span>:</span></p> <span>{{ city }}</span></li>
+                      <li><p>Контакты<span>:</span></p> <span>{{ contact_information }}</span></li>
+                      <li><p>Промокод<span>:</span></p> <span>{{ specialword }}</span></li>
+                      <li><p>Ссылки<span>:</span></p> <span>{{ links }}</span></li>
+                      <li><p>Привел<span>:</span></p> <span>{{ who_invite }}</span></li>
+                      <li><a href="{% url 'edit_profile' pk %}" class='btn'> Редактировать профиль </a></li>
+                    </ul>
+                  </div><!-- about details -->
+                </div><!-- column -->
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="about_skills">
+                    <h3>Чем занимаюсь</h3>
+                    <div class="skills_progress">
+                        {% for what in what_do %}
+                            <div class="progress_item">
+                                <p class="progress_title">{{ what }}</p>
+                                {% comment %} <div class="progress">
+                                <div class="progress-bar" role="progressbar" data-transitiongoal="92"><span class="pg_indicator"></span>
+                                </div>
+                                </div>
+                                <p class="progress_percent">92%</p> {% endcomment %}
+                            </div>
+                        {% endfor %}
+                    </div><!-- skills progress -->
+                  </div>
+                  <h3>Ключевые слова</h3>
+                    <div class="skills_progress">
+                            <div class="progress_item">
+                                {% for keyword in keywords %}
+                                <p class="progress_title" style='margin: 10px;'>{{ keyword }}</p>
+                                {% endfor %}
+                            </div>
+                    </div><!-- skills progress -->
+                  </div>
+                  
+                  <!-- about skills -->
+                </div><!-- column -->
+              </div><!--   -->
+            </div><!-- body_container -->
+          </section>
+        {% comment %} <h4 style='text-align: center;'> Ваше имя: {{ name }} </h4>
+        <h4 style='text-align: center;'> Ваше фамилия/псевдоним: {{ second_name }} </h4>
+        <h4 style='text-align: center;'> Чем заниматесь: {{ what_do }} </h4>
+        <h4 style='text-align: center;'> Ключевые слова вашего профиля: {{ keywords }} </h4>
+        <h4 style='text-align: center;'> Город: {{ city }} </h4>
+        <h4 style='text-align: center;'> Контактная информация: {{ contact_information }} </h4>
+        <h4 style='text-align: center;'> Ссылки: {{ links }} </h4>
+        <h4 style='text-align: center;'> Слово для приглашения: {{ specialword }} </h4>
+        <h4 style='text-align: center;'> Проверенный аккаунт: {{ checkpeople }} </h4>
+        <h4 style='text-align: center;'> Вы были приглашены: {{ who_invite }} </h4>
+        <a href="{% url 'edit_profile' pk %}" class='btn btn-primary'> Редактировать профиль </a> {% endcomment %}
+    </div>
+{% endblock %}

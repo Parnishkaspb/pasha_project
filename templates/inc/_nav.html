@@ -1,0 +1,170 @@
+{% comment %} <nav class=" navbar navbar-expand-lg navbar-light " style="background-color: beige;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary" role="button" href="/main" style='margin-right: 10px;'>Профиль</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary find-button" role="button" href="/my_invest" style='margin-right: 10px;'>Мои проекты</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary" role="button" href="/find_an_investor" style='margin-right: 10px;'>Вложить $</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary find-button" role="button" href="/create" style='margin-right: 10px;'>Привлечь $</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary find-button" role="button" href="/find" style='margin-right: 10px;'>Поиск человека через друзей</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary find-button" role="button" href="/logout" style='position: absolute; right: 10px;'>Выход</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> {% endcomment %}
+
+<div id="header" class="left_side_content">
+    <div class="header_two">
+      <button type="button" class="menu-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar first_icon"></span>
+        <span class="icon-bar second_icon"></span>
+        <span class="icon-bar third_icon"></span>
+      </button>
+      <div class="header_image">
+        <a href="{% url 'main'%}"><img src="{{picture}}" alt="Logo" class="img-responsive"></a>
+      </div>
+
+      <ul class="left_menu nav">
+        <li>
+          <a class="page-scroll" href="{% url 'main'%}">
+            {% comment %} <a href="#header"> {% endcomment %}
+            <div class="menu_item">
+              <div class="menu_icon flaticon-people"></div>
+              <div class="menu_content">
+                <h4>Профиль</h4>
+                <p>Обо мне</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'create'%}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-curriculum-vitae"></div>
+              <div class="menu_content">
+                <h4>Привлечь $</h4>
+                <p>Создать проект</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'my_invest'%}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-suitcase"></div>
+              <div class="menu_content">
+                <h4>Мои проекты</h4>
+                <p>Мои проекты</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'find_an_investor'%}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-symbol"></div>
+              <div class="menu_content">
+                <h4>Вложить $</h4>
+                <p>Найти проекты</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'find'%}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-blogger"></div>
+              <div class="menu_content">
+                <h4 style="color: lime;
+                {% comment %} -webkit-text-stroke: 1px black; -webkit-text-fill-color: lime;{% endcomment %}
+                ">Связи</h4>
+                <p>Найти связи</p>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li>
+          <a class="page-scroll" href="{% url 'work' %}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-curriculum-vitae"></div>
+              <div class="menu_content">
+                <h4>Работа</h4>
+                <p>Поиск работы</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="page-scroll" href="{% url 'work' %}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-blog-comment-speech-bubble-symbol"></div>
+              <div class="menu_content">
+                <h4>Работа</h4>
+                <p>Поиск сотрудника</p>
+              </div>
+            </div>
+          </a>
+        </li>
+        
+        <li>
+          <a class="page-scroll" href="{% url 'work' %}">
+            <div class="menu_item">
+              <div class="menu_icon flaticon-symbol"></div>
+              <div class="menu_content">
+                <h4>Криптовалюта</h4>
+                <p>P2P</p>
+              </div>
+            </div>
+          </a>
+        </li>
+
+
+        <li>
+            <a class="page-scroll" href="{% url 'logout'%}">
+              {% comment %} <a href="#header"> {% endcomment %}
+              <div class="menu_item">
+                <div class="menu_icon flaticon-web"></div>
+                <div class="menu_content">
+                  <h4>Выход</h4>
+                  <p>Выйти из системы</p>
+                </div>
+              </div>
+            </a>
+          </li>
+        {% comment %} <li>
+            <a class="page-scroll" href="#services">
+                <div class="menu_item">
+                    <div class="menu_icon flaticon-24-hours-service"></div>
+                    <div class="menu_content">
+                    <h4>Связаться</h4>
+                    <p>Написать разработчикам</p>
+                    </div>
+                </div>
+            </a>
+        </li> {% endcomment %}
+      </ul>
+    </div>
+  </div><!-- left side content -->
+
+  <script> 
+    $('.menu-toggle').on('click', function(){
+        $('.header_two').toggleClass("open");
+    })
+  </script>

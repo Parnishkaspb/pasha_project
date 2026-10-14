@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Логин
+{% endblock %}
+
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/iofrm-theme4.css' %}">
+    <div class="form-body">
+        {% comment %}
+        <div class="website-logo">
+            <a href="index.html">
+                <div class="logo">
+                    <img class="logo-size" src="images/logo-light.svg" alt=""> 
+                    //КАРТИНКА СВЯЗИ
+                </div>
+            </a>
+        </div> 
+        {% endcomment %}
+        <div class="row">
+            <div class="img-holder">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    {% comment %} КАРТИНКА СВЯЗИ БОЛЬШАЯ!!!! {% endcomment %}
+                    <img src="images/graphic1.svg" alt="">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items">
+                        <h3>Связи</h3>
+                        <p>Вход в мир связей</p>
+                        <div class="page-links">
+                            <a href="{% url 'login' %}" class="active">Вход</a><a href="{% url 'register' %}">Регистрация</a>
+                        </div>
+                        <form action="{% url 'login' %}" id='forma' method="post">
+                            {% if flag == False %}
+                            <div class="alert alert-warning alert-dismissible fade show with-icon" role="alert">
+                                Неверно введен логин/пароль
+                            </div>
+                                <style>
+                                    #login {
+                                        margin-top: 10px;
+                                        border-radius: 10px;
+                                        border-color: red;
+                                    }
+                                    #password {
+                                        margin-top: 10px;
+                                        border-radius: 10px;
+                                        border-color: red;
+                                    }
+                                </style>
+                                {{form.login}}
+                                {{form.password}}
+                            </p>
+                            {% else %}
+                                {{form.login}}
+                                {{form.password}}
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Войти</button> 
+                                {% comment %} <a href="forget4.html">Забыли пароль</a> {% endcomment %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            let login = document.getElementById("login").addEventListener("focusout", myBlurFunction);
+            let password = document.getElementById("password").addEventListener("focusout", myBlurFunction);
+
+            function myBlurFunction() {
+                var test = [];
+                let flag = false;
+                $('#forma').find(':input').each(function(i, input) {
+                    test.push($(input).val());
+                });
+
+                for (let i = 0; i<test.length-1; ++i)
+                    if (test[i].length == 0){
+                        flag = true;
+                        break;
+                    }
+
+                if (!flag){
+                    document.getElementById("ibtn").disabled = false;
+                }
+            }
+        });
+        const entryButton = document.getElementById('ibtn');
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                event.target.form.submit();
+                console.log('Кнопка "Войти" нажата!');
+            }
+        }
+        document.addEventListener('keypress', handleKeyPress);
+    </script>
+{% endblock %}

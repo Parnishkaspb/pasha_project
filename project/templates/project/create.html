@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Создать новый проект
+{% endblock %}
+
+
+{% block content %}
+<style>
+    .highlight {
+        font-weight: bold;
+        color: blue;
+    }
+    .add_icon {
+        width: 12px;
+        height: 12px;
+    }
+
+
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f1f1;
+        padding: 20px;
+      }
+  
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      }
+  
+      .form-container h3 {
+        text-align: center;
+      }
+  
+      .form-group {
+        margin-bottom: 20px;
+      }
+  
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+  
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+  
+      .form-group textarea {
+        width: 100%;
+        height: 80px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+  
+      .form-group button {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+  
+      .form-group button:hover {
+        background-color: #45a049;
+      }
+
+
+
+</style>
+{% include 'inc/_nav.html' %}
+
+<div class='main'>
+    {% comment %} <form action="{% url 'create' %}" method="post" enctype="multipart/form-data"> {% endcomment %}
+        <div class="form-container">
+            {% if type == 'create' %}
+              <h3>Создание проекта</h3>
+              <form action="{% url 'create' %}" method="post" enctype="multipart/form-data">
+            {% else %}
+              <h3>Редактирование проекта</h3>
+              <form action="{% url 'edit_invest' pk %}" method="post" enctype="multipart/form-data">
+            {% endif %}
+            {% comment %} <h3>Создание проекта</h3>
+            <form action="{% url 'create' %}" method="post" enctype="multipart/form-data"> {% endcomment %}
+              <div class="form-group">
+                {{ form.title.errors }}
+                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                {{ form.title }}
+              </div>
+              <div class="form-group">
+                {{ form.description.errors }}
+                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                {{ form.description }}
+              </div>
+              <div class="form-group">
+                {{ form.keywords.errors }}
+                <label for="{{ form.keywords.id_for_label }}">{{ form.keywords.label }}</label>
+                {{ form.keywords }}
+                <ul id="keyword_list_delete"></ul>
+                <input type="text" id="keyword_input" class='form-control' placeholder="Введите ключевые слова" >
+                <input type="hidden" name="keywords_add_input" id="keywords_add_input">
+                <input type='button' id='keys' value='Нет ключевых слов - Жми!'>
+                <ul id="keyword_list_add"></ul>
+              </div>
+              <div class="form-group">
+                {{ form.budget.errors }}
+                <label for="{{ form.budget.id_for_label }}">{{ form.budget.label }}</label>
+                {{ form.budget }}
+              </div>
+              <div class="form-group">
+                <label for="file">Файл проекта:</label>
+                {{ form.file.errors }}
+                {% comment %} {{ form.file.label }} {% endcomment %}
+                {{ form.file }}
+              </div>
+              {{ form.number }}
+              {% csrf_token %}
+              <div class="form-group">
+                  {% if type == 'create' %}
+                    <button type="submit">Создать проект</button>
+                  {% else %}
+                    <button type="submit">Редактировать проект</button>
+                  {% endif %}
+              </div>
+            </form>
+        </div>
+    {% comment %} </form> {% endcomment %}
+</div>
+    <script src="{% static 'js/help_function.js' %}"> </script>
+    <script>
+        const keyword = document.getElementById('keyword_input');
+        const keywordListAdd = document.getElementById('keyword_list_add');
+
+        keyword.addEventListener('input', function () {
+            NewQuery(keywordListAdd, 'keyword', 'autocompletekeyword', keyword, "{% static 'images/free-icon-add-button-8344983.png' %}", 3)
+        });
+
+        {% if type == 'edit'%}
+        doSomething(3, '', 1);
+        {% endif %}
+
+        var keywords_add  = [];
+        $('#keys').click(function() {
+          let val = keyword.value;
+          if (keyword.value != ''){
+              doSomething(3, keyword.value, 1);
+              const keywords_add_input = document.getElementById('keywords_add_input');
+              keywords_add_input.value = '';
+              keywords_add.push(val);
+              keywords_add_input.value = keywords_add;
+          }
+      });
+    </script>
+{% endblock %}

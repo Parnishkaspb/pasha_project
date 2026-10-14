@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+{% include 'inc/_nav.html' %}
+<style>
+    .highlight {
+        font-weight: bold;
+        color: blue;
+    }
+    {% comment %} .city-item {
+        display: flex;
+        align-items: center;
+    }
+    .city-name {
+        margin-right: 5px;
+    } {% endcomment %}
+    .add_icon {
+        width: 12px;
+        height: 12px;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f1f1;
+        padding: 20px;
+      }
+</style>
+    <form action="{% url 'edit_profile' id %}" id='msform' method="post">
+        <h4> Заполнить информацию о себе </h4>
+        {{form.name}}
+        {{form.fio_psev}}
+        <ul id="whatdo_list_delete"></ul>
+        {{ form.whatdo_input }}
+        {{ form.whatdo_input_hidden }}
+        <ul id="whatdo_list_add"></ul>
+
+        <ul id="keyword_list_delete"></ul>
+        {{ form.keyword_input }}
+        {{ form.keyword_input_hidden }}
+        <ul id="keyword_list_add"></ul>
+
+        <ul id="city_list_delete"></ul>
+        {{ form.city_input }}
+        {{ form.city_input_hidden }}
+        <ul id="city_list_add"></ul>
+        
+        {{ form.contact_information }}
+        {{ form.links }}
+        {% csrf_token %}
+        <button type="submit" id='reg' class="btn btn-primary"> {{button}} </button>
+    </form>
+    <script src="{% static 'js/help_function.js' %}"> </script>
+    <script>
+        const keyword = document.getElementById('keyword_input');
+        const keywordListAdd = document.getElementById('keyword_list_add');
+
+        const city = document.getElementById('city_input');
+        const cityListAdd = document.getElementById('city_list_add');
+
+        const whatdo = document.getElementById('whatdo_input');
+        const whatdoListAdd = document.getElementById('whatdo_list_add');
+
+        const picture = 'free-icon-add-button-8344983.png';
+        city.addEventListener('input', function () {
+            NewQuery(cityListAdd, 'city', 'autocompletecity', city, picture, 1)
+        });
+
+        whatdo.addEventListener('input', function () {
+            NewQuery(whatdoListAdd, 'whatdo', 'autocompletewhatdo', whatdo, picture, 2)
+        });
+
+        keyword.addEventListener('input', function () {
+            NewQuery(keywordListAdd, 'keyword', 'autocompletekeyword', keyword, picture, 3)
+        });
+
+        doSomething(1, '', 1)
+        doSomething(2, '', 1)
+        doSomething(3, '', 1)
+    </script>
+{% endblock %}

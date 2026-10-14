@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Страница в разработке
+{% endblock %}
+
+
+{% block content %}
+<style>
+    body h1{
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+{% include 'inc/_nav.html' %}
+    <h1> {{error}} </h1>
+{% endblock %}
